@@ -1,9 +1,33 @@
+import Image from "next/image";
+import Right from "../icons/Right";
+
 export default function Hero(){
     return (
-        <section>
-            <h1>Everything is better with pizza</h1>
-            <p>Pizza is the missing piece that makes every thing complete , 
-                a simple yet delicious joy in life</p>
+        <section className="hero">
+            <div className = "py-12">
+                <h1 className="text-4xl semibold ">
+                    Everything<br/> 
+                    is better <br/>
+                    with a&nbsp; 
+                    <span className = "text-primary">Pizza</span>
+                </h1>
+                <p className="my-6 text-gray-500 text-sm">Pizza is the missing piece that makes every thing complete , 
+                    a simple yet delicious joy in life</p>
+                <div className="flex gap-4 text-sm">
+                    <button className="bg-primary uppercase text-white px-4 py-2 rounded-full flex items-center gap-2 ">
+                        Order now
+                        <Right/>
+                    </button>
+                    
+                    <button className="flex gap-2 py-2 text-gray-400 font-semibold">
+                        Learn more
+                        <Right/>
+                    </button>
+                </div>
+            </div>
+            <div className="relative">
+              <Image src = {'/pizza.png'} layout = {'fill'} objectFit= {"contain"} alt = {'pizza'}/>
+            </div>
         </section>
     );
 }
