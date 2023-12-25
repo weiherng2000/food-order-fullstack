@@ -9,7 +9,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <>
-      <Header/>
+     
       <Hero/>
       <HomeMenu/>
       <section className="text-center my-16">
@@ -36,9 +36,7 @@ export default function Home() {
            <a className = "text-4xl underline text-gray-500" href= "tel: +6591773706">+65 91773706</a>
         </div>
       </section>
-      <footer className="border-t p-8 text-center text-gray-500 mt-16">
-          &copy; 2023 all rights reserved
-      </footer>
+      
     </>
   )
 }
