@@ -1,7 +1,7 @@
 import HomeMenu from "@/components/layout/HomeMenu";
 import SectionHeaders from "@/components/layout/SectionHeaders";
-import Header from "@/components/layout/header";
-import Hero from "@/components/layout/hero";
+import Header from "@/components/layout/Header";
+import Hero from "@/components/layout/Hero";
 import Link from "next/link";
 
 
@@ -9,7 +9,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <>
-      <Header/>
+     
       <Hero/>
       <HomeMenu/>
       <section className="text-center my-16">
@@ -36,9 +36,7 @@ export default function Home() {
            <a className = "text-4xl underline text-gray-500" href= "tel: +6591773706">+65 91773706</a>
         </div>
       </section>
-      <footer className="border-t p-8 text-center text-gray-500 mt-16">
-          &copy; 2023 all rights reserved
-      </footer>
+      
     </>
   )
 }
