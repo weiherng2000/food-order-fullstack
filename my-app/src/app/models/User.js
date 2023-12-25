@@ -1,4 +1,5 @@
 import {model, models, Schema} from "mongoose";
+import mongoose from "mongoose";
 
 const UserSchema = new Schema({
   name: {type: String},
@@ -7,4 +8,4 @@ const UserSchema = new Schema({
   image: {type: String},
 }, {timestamps: true});
 
-export const User = models?.User || model('User', UserSchema);
+export const User = mongoose.models?.User || mongoose.model('User', UserSchema);
