@@ -6,11 +6,15 @@ export default function RegisterPage(){
     //mx-auto helps to center a block element
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
-    function handleFormSubmit(ev){
+    const [creatingUser,setCreatingUser] = useState(false);
+    const [userCreated,setUserCreated] = useState(false);
+    async function handleFormSubmit(ev){
           ev.preventDefault();
-          fetch('/api/register',{method:'POST',
+          setCreatingUser(true);
+          await fetch('/api/register',{method:'POST',
           body: JSON.stringify({email,password}), 
-          headers:{'Content-Type': 'application/json'},})
+          headers:{'Content-Type': 'application/json'},});
+          setCreatingUser(false);
     }
 
     return (
@@ -19,9 +23,9 @@ export default function RegisterPage(){
             Register
           </h1>
           <form className="block max-w-xs mx-auto" onSubmit={handleFormSubmit}>
-            <input type = "email" placeholder = "email" value = {email} onChange={ev => setEmail(ev.target.value)}/>
-            <input type = "password" placeholder = "password" value = {password} onChange={ev => setPassword(ev.target.value)}/>
-            <button type = "submit">Register</button>
+            <input type = "email" placeholder = "email" value = {email} onChange={ev => setEmail(ev.target.value)} disabled = {creatingUser}/>
+            <input type = "password" placeholder = "password" value = {password} onChange={ev => setPassword(ev.target.value)} disabled = {creatingUser}/>
+            <button type = "submit" disabled = {creatingUser}>Register</button>
             <div className="my-4 text-center text-gray-500">or login with provider</div>
             <button className="flex gap-4 justify-center">
                 <Image src = {'/googleimage.jpg'} alt = {''} width = {24} height = {24}/>

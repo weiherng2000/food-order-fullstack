@@ -1,5 +1,6 @@
 import { User } from "@/app/models/User";
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 
 export async function POST(req){
@@ -9,6 +10,10 @@ export async function POST(req){
   if (!pass?.length || pass.length < 5) {
     new Error('password must be at least 5 characters');
   }
+  //creating a salt to add into the password as our password check is not working
+  const notHashedPassword = pass;
+  const salt = bcrypt.genSaltSync(10);
+  body.password = bcrypt.hashSync(notHashedPassword, salt);
 
   
 
