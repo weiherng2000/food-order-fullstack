@@ -1,8 +1,20 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
+import * as mongoose from "mongoose";
+import { User } from "@/app/models/User";
+import bcrypt from "bcrypt";
+import GoogleProvider from "next-auth/providers/google";
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
+import clientPromise from "@/libs/mongoConnect";
 
 const handler = NextAuth({
+  secret: process.env.SECRET,
+  adapter: MongoDBAdapter(clientPromise),
   providers:[
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET
+    }),
     CredentialsProvider({
     // The name to display on the sign in form (e.g. "Sign in with...")
     name: "Credentials",
@@ -10,23 +22,29 @@ const handler = NextAuth({
     // You can specify which fields should be submitted, by adding keys to the `credentials` object.
     // e.g. domain, username, password, 2FA token, etc.
     // You can pass any HTML attribute to the <input> tag through the object.
+    id: 'credentials',
     credentials: {
       username: { label: "Email", type: "email", placeholder: "test@example.com" },
       password: { label: "Password", type: "password" }
     },
     async authorize(credentials, req) {
       // Add logic here to look up the user from the credentials supplied
-      const user = { id: "1", name: "J Smith", email: "jsmith@example.com" }
+      const email = credentials?.email;
+      const password = credentials?.password; //note password here is unhashed 
 
-      if (user) {
-        // Any object returned will be saved in `user` property of the JWT
-        return user
-      } else {
-        // If you return null then an error will be displayed advising the user to check their details.
-        return null
+      mongoose.connect(process.env.MONGO_URL);
+      //finds first instance of email that matches
+      const user = await User.findOne({email});
+      //compareSync compares the hashed passwords as comparesync converts the password to a hashed password
+      const passwordOk = user && bcrypt.compareSync(password, user.password);
 
-        // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+      if (passwordOk) {
+        return user;
       }
+
+      return null
+
+  
     }
   })]
 })

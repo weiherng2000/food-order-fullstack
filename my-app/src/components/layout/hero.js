@@ -14,12 +14,12 @@ export default function Hero(){
                 <p className="my-6 text-gray-500 text-sm">Pizza is the missing piece that makes every thing complete , 
                     a simple yet delicious joy in life</p>
                 <div className="flex gap-4 text-sm">
-                    <button className="bg-primary uppercase text-white px-4 py-2 rounded-full flex items-center gap-2 ">
+                    <button className="bg-primary  justify-center uppercase text-white px-4 py-2 rounded-full flex items-center gap-2 ">
                         Order now
                         <Right/>
                     </button>
                     
-                    <button className="flex gap-2 py-2 text-gray-400 font-semibold">
+                    <button className="flex items-center border-0 gap-2 py-2 text-gray-400 font-semibold">
                         Learn more
                         <Right/>
                     </button>
