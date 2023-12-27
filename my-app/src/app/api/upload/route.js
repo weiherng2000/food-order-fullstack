@@ -37,7 +37,7 @@ export async function POST(req) {
         s3Client.send( new PutObjectCommand({
             Bucket:'food-ordering-wh',
             Key: newFileName,
-            ACL:'public-read', //public read so users can see the profile pic publicly
+            ACL: 'public-read', //public read so users can see the profile pic publicly
             ContentType: file.type,
             Body:buffer //body has to be buffered into chunks
         }));
