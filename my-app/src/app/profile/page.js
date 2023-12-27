@@ -1,50 +1,105 @@
 'use client'
+import InfoBox from "@/components/layout/InfoBox";
+import SuccessBox from "@/components/layout/SuccessBox";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { redirect } from 'next/navigation'
 import {useEffect, useState} from "react";
+import toast from "react-hot-toast";
 
 export default function ProfilePage(){
     const session = useSession();
     const {status} = session;
+
+    const [image,setImage] = useState('');
     const [userName,setUserName] = useState('');
-    const [saved,setSaved] = useState(false);
-    const [isSaving,setIsSaving] = useState(false);
+    const [streetAddress,setStreetAddress] = useState('');
+    const [phone,setPhone] = useState('');
+    const [postalCode,setPostalCode] = useState('');
+    const [city,setCity] = useState('');
+    const [country,setCountry] = useState('');
+   
 
     useEffect(() => {
         if (status === 'authenticated') {
           setUserName(session.data.user.name);
+          setImage(session.data.user.image);
+          //fetch by default GETs info
+          fetch('/api/profile').then(response =>{
+            response.json().then(data =>{
+                setPhone(data.phone);
+                setStreetAddress(data.streetAddress);
+                setPostalCode(data.postalCode);
+                setCity(data.city);
+                setCountry(data.country);
+            })
+          });
         }
       }, [session, status]);
     
 
     async function handleProfileInfoUpdate(ev){
         ev.preventDefault();
-        setSaved(false);
-        setIsSaving(true);
-        const response = await fetch('/api/profile',{
-            method:'PUT',
-            headers:{'Content-Type' : 'application/json'},
-            body: JSON.stringify({name:userName}),
-        });
-        setIsSaving(false);
-        if(response.ok)
-        {
-            setSaved(true);
-        }
+      
+        const savingPromise = new Promise(async (resolve, reject) => {
+            const response = await fetch('/api/profile', {
+              method: 'PUT',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({name:userName,image,streetAddress,phone,postalCode,city,country}),
+            });
+            if (response.ok)
+              resolve()
+            else
+              reject();
+          });
+          
+          //toast is a react library which allows us to have pop up alert styled boxes
+          await toast.promise(savingPromise, {
+            loading: 'Saving...',
+            success: 'Profile saved!',
+            error: 'Error',
+          });
+        
+       
     }
 
     async function handleFileChange(ev){
           //there will be a file object in the event
-          const files = ev.files;
-          if(files?.length > 0)
+          const files = ev.target.files;
+          if(files?.length === 1)
           {
             const data = new FormData;
-            data.set('files',files);
-            await fetch('/api/upload',{
+            data.set('file',files[0]);
+
+
+            const uploadPromise = fetch('/api/upload',{
                 method:'POST',
                 body:data,
-            })
+            }).then(response => {
+
+                if(response.ok)
+                {
+                    return response.json().then( link => {
+                        setImage(link);
+            
+                    })
+                        
+                    
+                }
+                throw new Error('Something went wrong! ');
+
+            
+                })
+                   
+              
+            
+            await toast.promise(uploadPromise,{
+                loading:'Uploading...',
+                success:'Upload complete',
+                error:'Upload error',
+            });
+         
+     
           }
     }
     
@@ -59,7 +114,7 @@ export default function ProfilePage(){
         redirect('/login');
     }
 
-    const userImage = session.data.user.image;
+ 
 
     return(
         <section className="mt-8">
@@ -68,19 +123,15 @@ export default function ProfilePage(){
             </h1>
            
             <div className="max-w-md mx-auto ">
-                {saved && (
-                       <h2 className="text-center bg-green-100 p-4 rounded-lg border border-green-300">Profile saved!</h2>
-                )}
-                {isSaving && (
-                    <h2 className="text-center bg-blue-100 p-4 rounded-lg border border-blue-300">
-                        Saving...
-                    </h2>
-                )}
-               
-                <div className="flex gap-4 items-center">
-                    <div className=" p-2 rounded-lg relative" >
+              
+                
+                <div className="flex gap-4 ">
+                    <div className=" p-2 rounded-lg relative max-w-[120px] max-h-[120px]" >
+                        {
+                            image && ( <Image className= "rounded-lg w-full h-full mb-1"src = {image} width = {250} height = {250} alt = {'avatar'}/>)
+                        }
                   
-                       <Image className= "rounded-lg w-full h-full mb-1"src = {userImage} width = {250} height = {250} alt = {'avatar'}/>
+                      
                        <label>
                           <input className= "hidden"type = "file" onChange={handleFileChange}/>
                           <span className="border rounded-lg p-2 block text-center border-gray-300 cursor-pointer">Edit</span>
@@ -90,8 +141,29 @@ export default function ProfilePage(){
                     </div>
                    
                     <form className="grow" onSubmit = {handleProfileInfoUpdate}>
+                        <label>First and last name</label>
                         <input type = "text" placeholder="First and last name" value={userName} onChange={ ev => setUserName(ev.target.value)}/>
-                        <input type = "email" value = {session.data.user.email} disabled = {true}/>
+                        <label>Email</label>
+                        <input type = "email" value = {session.data.user.email} disabled = {true} placeholder = {'email'}/>
+                        <label>Phone</label>
+                        <input  type = "tel" placeholder="Phone number" value = {phone} onChange = { ev => setPhone(ev.target.value)}/>
+                        <label>Street Address</label>
+                        <input  type = "text" placeholder="Street Address"  value = {streetAddress} onChange = { ev => setStreetAddress(ev.target.value)}/>
+                        <div className="flex gap-2">
+                            <div>
+                                <label>City</label>
+                                <input   type = "text" placeholder="City Address"  value = {city} onChange = { ev => setCity(ev.target.value)}/>
+                            </div>
+                            <div>
+                                <label>Postal Code</label>
+                                <input   type = "text" placeholder="Postal code"  value = {postalCode} onChange = { ev => setPostalCode(ev.target.value)}/>
+                            </div>
+                           
+                        </div>
+                        <label>Country</label>
+                        <input  type = "text" placeholder="Country"  value = {country} onChange = { ev => setCountry(ev.target.value)}/>
+                      
+                        
                         <button type = "submit">Save</button>
                     </form>
                 </div>
