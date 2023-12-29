@@ -1,4 +1,5 @@
 'use client'
+import EditableImage from "@/components/layout/EditableImage";
 import InfoBox from "@/components/layout/InfoBox";
 import SuccessBox from "@/components/layout/SuccessBox";
 import UserTabs from "@/components/layout/UserTabs";
@@ -69,45 +70,7 @@ export default function ProfilePage(){
        
     }
 
-    async function handleFileChange(ev){
-          //there will be a file object in the event
-          const files = ev.target.files;
-          if(files?.length === 1)
-          {
-            const data = new FormData;
-            data.set('file',files[0]);
-
-
-            const uploadPromise = fetch('/api/upload',{
-                method:'POST',
-                body:data,
-            }).then(response => {
-
-                if(response.ok)
-                {
-                    return response.json().then( link => {
-                        setImage(link);
-            
-                    })
-                        
-                    
-                }
-                throw new Error('Something went wrong! ');
-
-            
-                })
-                   
-              
-            
-            await toast.promise(uploadPromise,{
-                loading:'Uploading...',
-                success:'Upload complete',
-                error:'Upload error',
-            });
-         
-     
-          }
-    }
+    
     
     //returns loading text on the screen when page
     if(status === 'loading' || !profileFetched)
@@ -132,15 +95,7 @@ export default function ProfilePage(){
                 
                 <div className="flex gap-4 ">
                     <div className=" p-2 rounded-lg relative max-w-[120px] max-h-[120px]" >
-                        {
-                            image && ( <Image className= "rounded-lg w-full h-full mb-1"src = {image} width = {250} height = {250} alt = {'avatar'}/>)
-                        }
-                  
-                      
-                       <label>
-                          <input className= "hidden"type = "file" onChange={handleFileChange}/>
-                          <span className="border rounded-lg p-2 block text-center border-gray-300 cursor-pointer">Edit</span>
-                       </label>
+                       <EditableImage link = {image} setLink={setImage}/>
                        
                
                     </div>
