@@ -9,3 +9,20 @@ export async function POST(req){
     const menuItemDoc = await MenuItem.create(data);
     return Response.json(menuItemDoc);
 }
+
+export async function PUT(req) {
+    mongoose.connect(process.env.MONGO_URL);
+
+    const {_id, ...data} = await req.json();
+    await MenuItem.findByIdAndUpdate(_id, data);
+    
+    return Response.json(true);
+  }
+
+export async function GET() {
+    mongoose.connect(process.env.MONGO_URL);
+    return Response.json(
+        //find all of them
+      await MenuItem.find()
+    );
+}

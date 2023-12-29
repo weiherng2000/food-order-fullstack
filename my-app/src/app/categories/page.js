@@ -35,9 +35,9 @@ export default function CategoriesPage() {
 
         ev.preventDefault();
         const creationPromise = new Promise( async (resolve,reject) => {
-            //get the category name
+            //change the category name to one we input into the input field
             const data = {name:categoryName};
-            //if we are editing the category our data will be equal to the 
+            //if we are editing the category our data id will be equal to the  edit data id we want to edit
             if (editedCategory) {
                 data._id = editedCategory._id;
               }
@@ -114,7 +114,7 @@ export default function CategoriesPage() {
                 {categories?.length > 0 && categories.map( c=> (
                    
                     <button onClick={() => {setEditedCategory(c); setCategoryName(c.name); } }
-                    className="bg-gray-200 rounded-xl px-4 flex gap-1 cursor-pointer mb-1">
+                    className=" rounded-xl px-4 flex gap-1 cursor-pointer mb-1">
                         
                         <span>{c.name}</span>
                         
