@@ -13,34 +13,32 @@ import toast from "react-hot-toast";
 
 export default function EditMenuItemPage() {
       
-  const [image,setImage] = useState('');
-  const[name,setName] = useState('');
-  const[description,setDescription] = useState('');
-  const[basePrice,setBasePrice] = useState('');
+  const [menuItem, setMenuItem] = useState(null);
   const [redirectToItems,setRedirectToItems] = useState(false);   
 
 
   const {loading,data} = useProfile();
   //useParams contain the id of the menu item we want to edit
   const {id} = useParams();
-
+  
+  //useffect runs automitcally once when page is rendered and sends a get request to menu-items
+  //we get the menu item of the item we want to edit which will fill out the edit form
   useEffect(() => {
     fetch('/api/menu-items').then(res => {
       res.json().then(items => {
         //check for each item i each id for i is equal to the id of useParams
         const item = items.find(i => i._id === id);
-        setImage(item.image);
-        setName(item.name);
-        setDescription(item.description);
-        setBasePrice(item.basePrice);
+        setMenuItem(item);
       });
     })
   }, []);
 
-  async function handleFormSubmit(ev){
+  async function handleFormSubmit(ev,data){
 
       ev.preventDefault();
-      const data = {image,name,description,basePrice,_id:id};
+      // we take the data from the form component and merge it with id to create a new data object
+      //let and const not usesable here as they would clash with function parameters due to reassigment
+      data = {...data,_id:id};
       const savingPromise = new Promise(async (resolve,reject) => {
 
           const response = await fetch('/api/menu-items', {
@@ -94,7 +92,7 @@ export default function EditMenuItemPage() {
                   
               </Link>
           </div>
-          <MenuItemForm/>
+          <MenuItemForm menuItem = {menuItem} onSubmit={handleFormSubmit}/>
       </section>
     );
 
