@@ -90,7 +90,7 @@ export default function ProfilePage(){
             <UserTabs isAdmin={isAdmin}/>
           
            
-            <div className="max-w-md mx-auto mt-8">
+            <div className="max-w-2xl mx-auto mt-8">
               
                 
                 <div className="flex gap-4 ">
