@@ -38,13 +38,14 @@ export default function MenuItemForm({onSubmit,menuItem}){
                 <label>Item name</label>
                 <input type = "text" value = {name} onChange={ev=> setName(ev.target.value)}/>
                 <label>Description</label>
+                <input type = "text" value = {description} onChange={ev=> setDescription(ev.target.value)}/>
                 <label>Category</label>
                 <select value={category} onChange={ev => setCategory(ev.target.value)}>
                     {categories?.length > 0 && categories.map(c=> (
                         <option value = {c._id}>{c.name}</option>
                     ))}
                 </select>
-                <input type = "text" value = {description} onChange={ev=> setDescription(ev.target.value)}/>
+              
                 <label>Base price</label>
                 <input type = "text" value = {basePrice} onChange={ev=> setBasePrice(ev.target.value)}/>
                 <MenuItemPriceProps name = {'Sizes'} addLabel = {'Add item size'}props={sizes} setProps={setSizes}/>

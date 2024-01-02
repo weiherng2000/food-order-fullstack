@@ -1,6 +1,9 @@
 'use client';
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { useContext } from "react";
+import { CartContext } from "../AppContext";
+
 
 export default function Header(){
     const session = useSession();
@@ -8,6 +11,7 @@ export default function Header(){
     //at the start session data is undefined so we add question mark
     const status = session?.status
     const userData = session.data?.user;
+    const {cartProducts} = useContext(CartContext);
     let userName = userData?.name || userData?.email;
     if (userName && userName.includes(' '))
     {
@@ -21,9 +25,9 @@ export default function Header(){
             <nav className="flex items-center gap-8 text-gray-500 font-semibold">
                 <Link className="text-primary font-semibold text-2xl" href = "/">ST PIZZA</Link>
                 <Link href = {'/'}>Home</Link>
-                <Link href = {''}>Menu</Link>
-                <Link href = {''}>About </Link>
-                <Link href = {''}>Contact</Link>
+                <Link href = {'/menu'}>Menu</Link>
+                <Link href = {'/#about'}>About </Link>
+                <Link href = {'/#contact'}>Contact</Link>
              
             </nav>
             <nav className="flex items-center gap-4 text-gray-500 font-semibold">
@@ -46,6 +50,8 @@ export default function Header(){
                       </>
                  )
               }
+              
+            <Link href={'/cart'}>Cart products({cartProducts.length})</Link>
              
             </nav>
 
