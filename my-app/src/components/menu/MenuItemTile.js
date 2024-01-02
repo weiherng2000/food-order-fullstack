@@ -14,8 +14,14 @@ export default function MenuItemTile({onAddToCart,...item}) {
         <h4 className="font-semibold my-3">{name} </h4>
         
         <p className="text-gray-500 text-sm line-clamp-3">{description}</p>
+
         <button onClick  = {onAddToCart}className="bg-primary mt-4 text-white rounded-full px-8 py-2">
-            Add to cart ${basePrice}
+
+            {
+             (sizes?.length > 0 || extraIngredientPrices?.length > 0) ? (
+              <span>Add to cart (from ${basePrice})</span>
+               ) : (<span>Add to Cart${basePrice}</span>)}
+           
         </button>
     </div>
   );

@@ -45,7 +45,7 @@ export function AppProvider({children}){
     }
     return(
         <SessionProvider>
-            <CartContext.Provider value={{cartProducts,setCartProducts,addToCart,}}>
+            <CartContext.Provider value={{cartProducts,setCartProducts,addToCart,removeCartProducts,clearCart}}>
                {children}
 
             </CartContext.Provider>
