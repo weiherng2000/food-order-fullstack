@@ -15,7 +15,7 @@ export default function MenuItem(menuItem){
 
 
     async function handleAddToCartButtonClick() {
-        console.log('add to cart');
+        
         const hasOptions = sizes.length > 0 || extraIngredientPrices.length > 0;
         // Check if there are options (sizes or extra ingredients) and if the popup is not already shown
         if (hasOptions && !showPopup) {
@@ -27,9 +27,10 @@ export default function MenuItem(menuItem){
         addToCart(menuItem, selectedSize, selectedExtras);
         // Introduce a delay using a Promise to simulate an asynchronous operation (e.g., an API call)
         await new Promise(resolve => setTimeout(resolve, 1000));
-        toast.success('Item added');
+        
         //After the delay, it logs 'hiding popup' to the console and hides the popup 
-        console.log('hiding popup');
+        
+        await toast.success('Item added');
         setShowPopup(false);
       }
 
