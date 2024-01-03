@@ -27,6 +27,7 @@ export default function MenuItem(menuItem){
         addToCart(menuItem, selectedSize, selectedExtras);
         // Introduce a delay using a Promise to simulate an asynchronous operation (e.g., an API call)
         await new Promise(resolve => setTimeout(resolve, 1000));
+        toast.success('Item added');
         //After the delay, it logs 'hiding popup' to the console and hides the popup 
         console.log('hiding popup');
         setShowPopup(false);
